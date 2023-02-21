@@ -1,14 +1,14 @@
 body {
   position: relative;
   max-width: 1440px;
+  margin: auto;
 }
 header {
   margin-right: 150px;
   margin-left: 150px;
 }
-
 .login-section {
-  margin-top: 150px !important;
+  margin-top: 40px !important;
   margin: auto;
   width: 33%;
   height: 100vh;
@@ -18,7 +18,7 @@ header {
 }
 .login-section h2 {
   align-self: center;
-  padding-bottom: 37px;
+  padding-bottom: 30px;
 }
 .login-section input {
   width: 100%;

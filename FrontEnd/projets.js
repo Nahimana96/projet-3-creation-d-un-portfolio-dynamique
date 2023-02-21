@@ -3,11 +3,11 @@ const projets = await fetch("http://localhost:5678/api/works")
   .then((data) => data);
 
 function afficherProjets(projets) {
-  for (let i = 0; i < projets.length; i++) {
+  for (let projet of projets) {
     const image = document.createElement("img");
-    image.src = projets[i].imageUrl;
+    image.src = projet.imageUrl;
     const titre = document.createElement("figcaption");
-    titre.innerText = projets[i].title;
+    titre.innerText = projet.title;
 
     const gallery = document.querySelector(".gallery");
     const figure = document.createElement("figure");
