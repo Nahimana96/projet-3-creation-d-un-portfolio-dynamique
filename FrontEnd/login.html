@@ -30,14 +30,17 @@
         </ul>
       </nav>
     </header>
-    <main class="login-section">
+    <main>
       <h2>Log in</h2>
-      <label for="email">E-mail</label><br />
-      <input type="email" name="email" id="email" /><br />
-      <label for="password">Mot de passe</label><br />
-      <input type="password" name="password" id="password" /><br />
-      <input type="submit" value="Se connecter" id="submit" />
-      <a href="#">Mot de passe oublié</a>
+      <form class="login-section">
+        <label for="email">E-mail</label><br />
+        <input type="email" name="email" id="email" /><br />
+        <label for="password">Mot de passe</label><br />
+        <input type="password" name="password" id="password" /><br />
+        <div class="error"></div>
+        <input type="submit" value="Se connecter" id="submit" />
+        <a href="#">Mot de passe oublié</a>
+      </form>
     </main>
     <footer>
       <p>Mentions légales</p>
