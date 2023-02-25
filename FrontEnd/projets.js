@@ -47,3 +47,5 @@ btnHotelRestaurant.addEventListener("click", () => {
   document.querySelector(".gallery").innerHTML = "";
   afficherProjets(hotelRestaurant);
 });
+const btnModifierProjets = document.querySelector(".modifier-projets");
+const btnModifierImage = document.querySelector(".modifier-image");

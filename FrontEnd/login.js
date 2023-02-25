@@ -3,20 +3,18 @@ const userSophie = {
   password: "S0phie",
 };
 async function login(objet) {
-  const token = await fetch("http://localhost:5678/api/users/login", {
+  const bearerToken = await fetch("http://localhost:5678/api/users/login", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(objet),
   })
     .then((response) => response.json())
     .then((data) => data.token);
-  console.log(token);
+  console.log(bearerToken);
 }
 const form = document.querySelector(".login-section");
 const adressMail = document.getElementById("email");
 const password = document.getElementById("password");
-const seConnecter = document.getElementById("submit");
-
 form.addEventListener("submit", (event) => {
   console.log("click");
   event.preventDefault();
@@ -25,11 +23,15 @@ form.addEventListener("submit", (event) => {
     email: adressMail.value,
     password: password.value,
   };
+  const error = document.querySelector(".error");
+
   if (user.email == userSophie.email && user.password == userSophie.password) {
+    error.innerHTML = "";
     login(user);
+    window.location.href = "index.html";
   } else {
-    const error = document.querySelector(".error");
     const messageError = document.createElement("p");
+    error.innerHTML = "";
     messageError.innerText = "Erreur dans l’identifiant ou le mot de passe";
     messageError.style.color = "red";
     error.appendChild(messageError);
