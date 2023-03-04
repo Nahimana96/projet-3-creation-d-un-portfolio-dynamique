@@ -5,15 +5,30 @@ const projets = await fetch("http://localhost:5678/api/works")
 function afficherProjets(projets) {
   for (let projet of projets) {
     const image = document.createElement("img");
+    const imageModale = document.createElement("img");
     image.src = projet.imageUrl;
+    imageModale.src = projet.imageUrl;
     const titre = document.createElement("figcaption");
     titre.innerText = projet.title;
-
+    const titreModal = document.createElement("figcaption");
+    titreModal.textContent = "éditer";
     const gallery = document.querySelector(".gallery");
+    const galleryModale = document.querySelector(".gallery-modale");
     const figure = document.createElement("figure");
+    const figureModale = document.createElement("figure");
+    const btnsupprimer = document.createElement("div");
+    btnsupprimer.classList.add("btn-supprimer");
+    const trashIcon = document.createElement("i");
+    trashIcon.classList.add("fa-solid", "fa-trash-can");
     gallery.appendChild(figure);
+    galleryModale.appendChild(figureModale);
+
     figure.appendChild(image);
     figure.appendChild(titre);
+    figureModale.appendChild(imageModale);
+    figureModale.appendChild(titreModal);
+    figureModale.appendChild(btnsupprimer);
+    btnsupprimer.appendChild(trashIcon);
   }
 }
 afficherProjets(projets);
@@ -47,5 +62,35 @@ btnHotelRestaurant.addEventListener("click", () => {
   document.querySelector(".gallery").innerHTML = "";
   afficherProjets(hotelRestaurant);
 });
-const btnModifierProjets = document.querySelector(".modifier-projets");
-const btnModifierImage = document.querySelector(".modifier-image");
+
+// Création d'une fonction qui verifie si l'utilisateur est connecté
+const lien = document.getElementById("login");
+function afficherBtnModifier() {
+  if (localStorage.getItem("UserId").length > 0) {
+    document.querySelector(".modifier-image").style.display = "block";
+    document.querySelector(".modifier-projets").style.display = "block";
+    lien.textContent = "logout";
+  }
+}
+afficherBtnModifier();
+
+//écouter le bouton logout
+lien.addEventListener("click", () => {
+  localStorage.clear();
+});
+
+// Afficher l'icone "X" dans la modale
+const xmark = document.createElement("i");
+xmark.classList.add("fa-solid", "fa-xmark");
+const modale = document.getElementById("modale");
+modale.appendChild(xmark);
+
+// écouter le bouton "modifier" pour afficher la modale
+document.querySelector(".modifier-projets").addEventListener("click", () => {
+  modale.style.display = "flex";
+});
+
+// ecouter le bouton "X" pour fermer la modale
+xmark.addEventListener("click", () => {
+  modale.style.display = "none";
+});

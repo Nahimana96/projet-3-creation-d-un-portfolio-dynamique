@@ -3,6 +3,9 @@ body {
   max-width: 1440px;
   margin: auto;
 }
+strong {
+  font-weight: 600;
+}
 header {
   margin-right: 150px;
   margin-left: 150px;

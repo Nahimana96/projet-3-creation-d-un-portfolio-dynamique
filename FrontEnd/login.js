@@ -2,21 +2,15 @@ const userSophie = {
   email: "sophie.bluel@test.tld",
   password: "S0phie",
 };
-async function login(objet) {
-  const bearerToken = await fetch("http://localhost:5678/api/users/login", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(objet),
-  })
-    .then((response) => response.json())
-    .then((data) => data.token);
-  console.log(bearerToken);
+function connectUser(adressMail) {
+  localStorage.setItem("UserId", adressMail);
+  window.location.href = "index.html";
 }
+
 const form = document.querySelector(".login-section");
 const adressMail = document.getElementById("email");
 const password = document.getElementById("password");
 form.addEventListener("submit", (event) => {
-  console.log("click");
   event.preventDefault();
 
   const user = {
@@ -27,8 +21,14 @@ form.addEventListener("submit", (event) => {
 
   if (user.email == userSophie.email && user.password == userSophie.password) {
     error.innerHTML = "";
-    login(user);
-    window.location.href = "index.html";
+    connectUser(user.email);
+    fetch("http://localhost:5678/api/users/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(user),
+    })
+      .then((response) => response.json())
+      .then((data) => localStorage.setItem("token", data.token));
   } else {
     const messageError = document.createElement("p");
     error.innerHTML = "";
