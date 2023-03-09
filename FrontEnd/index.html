@@ -91,9 +91,35 @@
       <section id="modale">
         <h3>Galerie Photo</h3>
         <div class="gallery-modale"></div>
-        <button class="ajout-photo">Ajouter une photo</button>
+        <button class="creer-projet">Ajouter une photo</button>
         <p class="supprimer">Supprimer la galerie</p>
       </section>
+      <form id="ajout-projet">
+        <h3>Ajout photo</h3>
+        <input type="file" id="file" accept="image/png, image/jpeg" hidden />
+        <div class="img-area">
+          <i class="fa-sharp fa-regular fa-image icone"></i>
+          <button class="ajouter-photo">+ Ajouter photo</button>
+          <p>jpg,png : 4mo max</p>
+        </div>
+        <div class="section-titre">
+          <label for="titre">Titre</label><br />
+          <input type="text" name="titre" /><br />
+        </div>
+        <div class="section-catégorie">
+          <label for="catégorie">Catégorie</label><br />
+          <select name="catégorie" id="categorie" required>
+            <option value=""></option>
+            <option value="Objets">Objets</option>
+            <option value="Appartements">Appartements</option>
+            <option value="Hôtels & restaurants">Hôtels & restaurants</option>
+          </select>
+        </div>
+        <div class="barre"></div>
+        <input type="submit" value="Valider" />
+        <i class="xmark2 fa-solid fa-xmark"></i>
+        <i class="fa-solid fa-arrow-left"></i>
+      </form>
     </main>
 
     <footer>

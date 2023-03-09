@@ -2,10 +2,6 @@ const userSophie = {
   email: "sophie.bluel@test.tld",
   password: "S0phie",
 };
-function connectUser(adressMail) {
-  localStorage.setItem("UserId", adressMail);
-  window.location.href = "index.html";
-}
 
 const form = document.querySelector(".login-section");
 const adressMail = document.getElementById("email");
@@ -21,7 +17,7 @@ form.addEventListener("submit", (event) => {
 
   if (user.email == userSophie.email && user.password == userSophie.password) {
     error.innerHTML = "";
-    connectUser(user.email);
+    localStorage.setItem("UserId", user.email);
     fetch("http://localhost:5678/api/users/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -29,6 +25,9 @@ form.addEventListener("submit", (event) => {
     })
       .then((response) => response.json())
       .then((data) => localStorage.setItem("token", data.token));
+    setTimeout(() => {
+      window.location = "index.html";
+    }, 500);
   } else {
     const messageError = document.createElement("p");
     error.innerHTML = "";
