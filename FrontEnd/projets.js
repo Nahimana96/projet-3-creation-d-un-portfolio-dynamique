@@ -177,7 +177,7 @@ formulaire.addEventListener("submit", (event) => {
   const work = {
     id: select.selectedIndex,
     title: titre.value,
-    // imageUrl: imgAjouter.src,
+    imageUrl: imgAjouter.src,
     categoryId: select.value,
     userId: select.selectedIndex,
   };
@@ -191,6 +191,6 @@ formulaire.addEventListener("submit", (event) => {
     body: JSON.stringify(work),
   })
     // .then((response) => response.json())
-    .then((data) => console.log(data))
+    .then((data) => console.log(data.status))
     .catch((err) => console.log(err));
 });
