@@ -33,7 +33,7 @@
       <section id="introduction">
         <figure>
           <img src="./assets/images/sophie-bluel.png" alt="" />
-          <div class="modifier-image">
+          <div class="btn modifier-image">
             <i class="fa-regular fa-pen-to-square"></i>
             <a href="#">modifier</a>
           </div>
@@ -59,7 +59,7 @@
       </section>
       <section id="portfolio">
         <h2>Mes Projets</h2>
-        <div class="modifier-projets">
+        <div class="btn modifier-projets">
           <i class="fa-regular fa-pen-to-square"></i>
           <a href="#">modifier</a>
         </div>
@@ -96,19 +96,27 @@
       </section>
       <form id="ajout-projet">
         <h3>Ajout photo</h3>
-        <input type="file" id="file" accept="image/png, image/jpeg" hidden />
+        <input
+          type="file"
+          id="file"
+          accept="image/png, image/jpeg"
+          max-file-size="4000"
+          hidden
+          required
+        />
         <div class="img-area">
           <i class="fa-sharp fa-regular fa-image icone"></i>
           <button class="ajouter-photo">+ Ajouter photo</button>
           <p>jpg,png : 4mo max</p>
         </div>
+        <div class="error-message"></div>
         <div class="section-titre">
           <label for="titre">Titre</label><br />
-          <input type="text" name="titre" /><br />
+          <input type="text" required /><br />
         </div>
         <div class="section-catégorie">
           <label for="catégorie">Catégorie</label><br />
-          <select name="catégorie" id="categorie" required>
+          <select id="categorie" required>
             <option value=""></option>
             <option value="Objets">Objets</option>
             <option value="Appartements">Appartements</option>

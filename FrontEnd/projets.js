@@ -2,6 +2,7 @@ const projets = await fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
   .then((data) => data);
 
+// Afficher les projets à la page d'accueil
 function afficherProjets(projets) {
   for (let projet of projets) {
     const image = document.createElement("img");
@@ -20,6 +21,65 @@ function afficherProjets(projets) {
     figure.appendChild(titre);
   }
 }
+
+// Trier les projets
+function trierLesProjets() {
+  afficherProjets(projets);
+  const btnTous = document.querySelector(".Tous");
+
+  // Bouton "TOUS" pour afficher tous les projets
+  btnTous.addEventListener("click", () => {
+    document.querySelector(".gallery").innerHTML = "";
+    afficherProjets(projets);
+  });
+  // Bouton "Objtes" pour afficher uniquement les objets
+  const btnObjets = document.querySelector(".Objets");
+  btnObjets.addEventListener("click", () => {
+    const objets = projets.filter((projet) => {
+      return projet.category.id == 1;
+    });
+    document.querySelector(".gallery").innerHTML = "";
+    afficherProjets(objets);
+  });
+
+  // Bouton "Appartements" pour afficher uniquement les appartements
+  const btnAppartements = document.querySelector(".Appartements");
+  btnAppartements.addEventListener("click", () => {
+    const appartements = projets.filter((projet) => {
+      return projet.category.id == 2;
+    });
+    document.querySelector(".gallery").innerHTML = "";
+    afficherProjets(appartements);
+  });
+
+  // Bouton "Hôtels & restaurant"
+  const btnHotelRestaurant = document.querySelector(".Hotels-restaurants");
+  btnHotelRestaurant.addEventListener("click", () => {
+    const hotelRestaurant = projets.filter((projet) => {
+      return projet.category.id == 3;
+    });
+    document.querySelector(".gallery").innerHTML = "";
+    afficherProjets(hotelRestaurant);
+  });
+}
+trierLesProjets();
+
+// Création d'une fonction qui verifie si l'utilisateur est connecté pour afficher des nouvelles fonctionnalités
+function afficherBtnModifier() {
+  const lien = document.getElementById("login");
+  if (localStorage.getItem("UserId").length > 0) {
+    document.querySelector(".modifier-image").style.display = "block";
+    document.querySelector(".modifier-projets").style.display = "block";
+    lien.textContent = "logout";
+  }
+  // supprimer toutes les clés dans le localStorage lorsque l'utilisateur se déconnecte
+  lien.addEventListener("click", () => {
+    localStorage.clear();
+  });
+}
+afficherBtnModifier();
+
+//Afficher les projets dans la modale
 function afficherProjetsDansModale() {
   for (let projet of projets) {
     const imageModale = document.createElement("img");
@@ -42,120 +102,34 @@ function afficherProjetsDansModale() {
     figureModale.appendChild(btnsupprimer);
     btnsupprimer.appendChild(trashIcon);
 
-    // supprimer les projets
-    // trashIcon.addEventListener("click", (e) => {
-    //   e.preventDefault();
-    //   deleteWork(projet.id);
-    // });
+    // supprimer les projets au click
+    btnsupprimer.addEventListener("click", (e) => {
+      e.preventDefault();
+      deleteWork(projet.id);
+    });
   }
+  // Afficher l'icone "X" dans la modale
+  const xMark = document.createElement("i");
+  xMark.classList.add("fa-solid", "fa-xmark");
+  const modale = document.getElementById("modale");
+  modale.appendChild(xMark);
+
+  // écouter le bouton "modifier" pour afficher la modale
+  document.querySelectorAll(".btn").forEach((item) => {
+    item.addEventListener("click", () => {
+      modale.style.display = "flex";
+      document.querySelector(".gallery-modale").innerHTML = "";
+      afficherProjetsDansModale();
+    });
+  });
+  // ecouter le bouton "X" pour fermer la modale
+  xMark.addEventListener("click", () => {
+    modale.style.display = "none";
+  });
 }
-afficherProjets(projets);
-const btnTous = document.querySelector(".Tous");
-btnTous.addEventListener("click", () => {
-  document.querySelector(".gallery").innerHTML = "";
-  afficherProjets(projets);
-});
-
-const btnObjets = document.querySelector(".Objets");
-btnObjets.addEventListener("click", () => {
-  const objets = projets.filter((projet) => {
-    return projet.category.id == 1;
-  });
-  document.querySelector(".gallery").innerHTML = "";
-  afficherProjets(objets);
-});
-const btnAppartements = document.querySelector(".Appartements");
-btnAppartements.addEventListener("click", () => {
-  const appartements = projets.filter((projet) => {
-    return projet.category.id == 2;
-  });
-  document.querySelector(".gallery").innerHTML = "";
-  afficherProjets(appartements);
-});
-const btnHotelRestaurant = document.querySelector(".Hotels-restaurants");
-btnHotelRestaurant.addEventListener("click", () => {
-  const hotelRestaurant = projets.filter((projet) => {
-    return projet.category.id == 3;
-  });
-  document.querySelector(".gallery").innerHTML = "";
-  afficherProjets(hotelRestaurant);
-});
-
-// Création d'une fonction qui verifie si l'utilisateur est connecté
-const lien = document.getElementById("login");
-function afficherBtnModifier() {
-  if (localStorage.getItem("UserId").length > 0) {
-    document.querySelector(".modifier-image").style.display = "block";
-    document.querySelector(".modifier-projets").style.display = "block";
-    lien.textContent = "logout";
-  }
-}
-afficherBtnModifier();
-
-//écouter le bouton logout
-lien.addEventListener("click", () => {
-  localStorage.clear();
-});
-
-// Afficher l'icone "X" dans la modale
-const xMark = document.createElement("i");
-xMark.classList.add("fa-solid", "fa-xmark");
-const modale = document.getElementById("modale");
-modale.appendChild(xMark);
-
-// écouter le bouton "modifier" pour afficher la modale
-document.querySelector(".modifier-projets").addEventListener("click", () => {
-  modale.style.display = "flex";
-  document.querySelector(".gallery-modale").innerHTML = "";
-  afficherProjetsDansModale();
-});
-
-// ecouter le bouton "X" pour fermer la modale
-xMark.addEventListener("click", () => {
-  modale.style.display = "none";
-});
-
-// Ajouter un projet
-
-const ajoutPhoto = document.querySelector(".ajouter-photo");
-const inputFile = document.querySelector("#file");
-const imgArea = document.querySelector(".img-area");
-ajoutPhoto.addEventListener("click", () => {
-  inputFile.click();
-});
-// récuperer les données de l'image choisie
-inputFile.addEventListener("change", () => {
-  const image = inputFile.files[0];
-  const reader = new FileReader();
-  reader.onload = () => {
-    const imgUrl = reader.result;
-    const img = document.createElement("img");
-    localStorage.setItem("imageUrl", imgUrl);
-    img.src = imgUrl;
-    imgArea.appendChild(img);
-  };
-  reader.readAsDataURL(image);
-});
-// fermer le formulaire avec l'icône "X-mark"
-const ajouterProjet = document.getElementById("ajout-projet");
-const xMark2 = document.querySelector(".xmark2");
-xMark2.addEventListener("click", () => {
-  ajouterProjet.style.display = "none";
-  modale.style.display = "none";
-});
-// revenir vers la modale avec l'icone "<-"
-const fleche = document.querySelector(".fa-arrow-left");
-fleche.addEventListener("click", () => {
-  ajouterProjet.style.display = "none";
-});
-// ecouter le bouton "ajouter une photo" dans la modale
-const createProjet = document.querySelector(".creer-projet");
-createProjet.addEventListener("click", () => {
-  ajouterProjet.style.display = "flex";
-});
+afficherProjetsDansModale();
 
 // création d'une fonction qui supprime un projet
-
 function deleteWork(id) {
   fetch(`http://localhost:5678/api/works/${id}`, {
     method: "DELETE",
@@ -166,31 +140,84 @@ function deleteWork(id) {
   }).then((response) => console.log(response.status));
 }
 
-// création d'une fonction qui ajoute un projet
-const titre = document.querySelector(".section-titre input");
-const select = document.getElementById("categorie");
+function afficherFormulaire() {
+  // ecouter le bouton "ajouter une photo" dans la modale
+  const createProjet = document.querySelector(".creer-projet");
+  createProjet.addEventListener("click", () => {
+    ajouterProjet.style.display = "flex";
+  });
+  // Ajouter une image au clic sur le boutton input[type="file"]
+  const ajoutPhoto = document.querySelector(".ajouter-photo");
+  const inputFile = document.querySelector("#file");
+  const imgArea = document.querySelector(".img-area");
+  ajoutPhoto.addEventListener("click", () => {
+    inputFile.click();
+  });
+  // récuperer les données de l'image choisie
+  inputFile.addEventListener("change", () => {
+    const image = inputFile.files[0];
 
-const formulaire = document.getElementById("ajout-projet");
-formulaire.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const imgAjouter = document.querySelector(".img-area img");
-  const work = {
-    id: select.selectedIndex,
-    title: titre.value,
-    imageUrl: imgAjouter.src,
-    categoryId: select.value,
-    userId: select.selectedIndex,
-  };
-  fetch("http://localhost:5678/api/works", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-      accept: "application/json",
-      "content-type": "multipart/form-data",
-    },
-    body: JSON.stringify(work),
-  })
-    // .then((response) => response.json())
-    .then((data) => console.log(data.status))
-    .catch((err) => console.log(err));
-});
+    // prevenir l'utilisateur si l'image dépasse 4MO
+    const maxSizeBytes = 4000000;
+    if (image.size > maxSizeBytes) {
+      const errorMessage = document.querySelector(".error-message");
+      errorMessage.style.display = "block";
+      errorMessage.innerHTML = "<p> votre image est supérieur à 4 Mo </p>";
+    } else {
+      document.querySelector(".error-message").style.display = "none";
+      localStorage.setItem("imageUrl", image);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const imgUrl = reader.result;
+        const img = document.createElement("img");
+        img.src = imgUrl;
+        imgArea.appendChild(img);
+      };
+      reader.readAsDataURL(image);
+      const changePhoto = document.querySelector(".ajouter-photo");
+      changePhoto.textContent = "changer la photo";
+    }
+  });
+  // fermer le formulaire avec l'icône "X-mark"
+  const ajouterProjet = document.getElementById("ajout-projet");
+  const xMark2 = document.querySelector(".xmark2");
+  xMark2.addEventListener("click", () => {
+    ajouterProjet.style.display = "none";
+    modale.style.display = "none";
+  });
+  // revenir vers la modale avec l'icone "<-"
+  const fleche = document.querySelector(".fa-arrow-left");
+  fleche.addEventListener("click", () => {
+    ajouterProjet.style.display = "none";
+  });
+}
+afficherFormulaire();
+
+// création d'une fonction qui envoie le nouveau projet vers l'API
+async function nouveauProjet() {
+  const titre = document.querySelector(".section-titre input");
+  const select = document.getElementById("categorie");
+  const formulaire = document.getElementById("ajout-projet");
+  const inputFile = document.querySelector("#file");
+  formulaire.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(formulaire);
+    formData.append("image", inputFile.files[0]);
+    formData.append("title", titre.value);
+    formData.append("category", select.selectedIndex);
+
+    fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      body: formData,
+    })
+      .then(function (res) {
+        if (res.OK) {
+          res.json();
+          return alert("Vous avez ajouté un nouveau projet !");
+        }
+      })
+      .catch((err) => console.log(err));
+  });
+}
+nouveauProjet();

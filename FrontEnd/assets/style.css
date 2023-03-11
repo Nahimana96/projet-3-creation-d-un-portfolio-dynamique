@@ -340,8 +340,10 @@ footer nav ul {
 #modale h3 {
   margin-bottom: 36px;
 }
-#modale > p {
+#modale .supprimer {
+  text-align: center;
   color: red;
+  cursor: pointer;
 }
 .creer-projet {
   font-family: "Syne";
@@ -471,7 +473,10 @@ footer nav ul {
   object-fit: cover;
   object-position: center;
 }
-
+.error-message {
+  text-align: center;
+  color: red;
+}
 #ajout-projet div {
   width: 100%;
 }
