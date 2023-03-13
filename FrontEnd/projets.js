@@ -64,7 +64,8 @@ function trierLesProjets() {
 }
 trierLesProjets();
 
-// Création d'une fonction qui verifie si l'utilisateur est connecté pour afficher des nouvelles fonctionnalités
+// Création d'une fonction qui verifie si l'utilisateur est connecté
+// afin d'afficher des nouvelles fonctionnalités
 function afficherBtnModifier() {
   const lien = document.getElementById("login");
   if (localStorage.getItem("UserId").length > 0) {
@@ -72,7 +73,7 @@ function afficherBtnModifier() {
     document.querySelector(".modifier-projets").style.display = "block";
     lien.textContent = "logout";
   }
-  // supprimer toutes les clés dans le localStorage lorsque l'utilisateur se déconnecte
+  // supprimer toutes les clés dans le localStorage lorsque l'utilisateur se déconnecte "logout"
   lien.addEventListener("click", () => {
     localStorage.clear();
   });
@@ -137,7 +138,10 @@ function deleteWork(id) {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "content-type": "application/json",
     },
-  }).then((response) => console.log(response.status));
+  }).then((response) => {
+    console.log(response.status);
+    alert("Projet supprimé");
+  });
 }
 
 function afficherFormulaire() {
@@ -211,12 +215,8 @@ async function nouveauProjet() {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       body: formData,
     })
-      .then(function (res) {
-        if (res.OK) {
-          res.json();
-          return alert("Vous avez ajouté un nouveau projet !");
-        }
-      })
+      .then((res) => res.json())
+      .then(alert("Projet ajouté avec success"))
       .catch((err) => console.log(err));
   });
 }
