@@ -103,12 +103,18 @@ function afficherProjetsDansModale() {
     figureModale.appendChild(btnsupprimer);
     btnsupprimer.appendChild(trashIcon);
 
-    // supprimer les projets au click
+    // supprimer un projet au click
     btnsupprimer.addEventListener("click", (e) => {
       e.preventDefault();
-      deleteWork(projet.id);
+      deleteProject(projet.id);
     });
   }
+  // supprimer tous les projets
+  const supprimerTout = document.querySelector(".supprimer");
+  supprimerTout.addEventListener("click", (e) => {
+    e.preventDefault();
+    deleteAllProjects();
+  });
   // Afficher l'icone "X" dans la modale
   const xMark = document.createElement("i");
   xMark.classList.add("fa-solid", "fa-xmark");
@@ -123,15 +129,23 @@ function afficherProjetsDansModale() {
       afficherProjetsDansModale();
     });
   });
-  // ecouter le bouton "X" pour fermer la modale
+  // fermer la modale lorsqu'on clique sur "X" et en dehors de la modale
   xMark.addEventListener("click", () => {
     modale.style.display = "none";
+  });
+  document.querySelector("main").addEventListener("click", (e) => {
+    const tagName = e.target.tagName;
+    const ajouterProjet = document.getElementById("ajout-projet");
+    if (tagName === "SECTION" || tagName === "IMG" || tagName === "ARTICLE") {
+      modale.style.display = "none";
+      ajouterProjet.style.display = "none";
+    }
   });
 }
 afficherProjetsDansModale();
 
 // création d'une fonction qui supprime un projet
-function deleteWork(id) {
+function deleteProject(id) {
   fetch(`http://localhost:5678/api/works/${id}`, {
     method: "DELETE",
     headers: {
@@ -140,10 +154,10 @@ function deleteWork(id) {
     },
   }).then((response) => {
     console.log(response.status);
-    alert("Projet supprimé");
   });
 }
 
+// Afficher le formulaire pour ajouter des nouveaux projets
 function afficherFormulaire() {
   // ecouter le bouton "ajouter une photo" dans la modale
   const createProjet = document.querySelector(".creer-projet");
@@ -209,15 +223,19 @@ async function nouveauProjet() {
     formData.append("image", inputFile.files[0]);
     formData.append("title", titre.value);
     formData.append("category", select.selectedIndex);
-
-    fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then(alert("Projet ajouté avec success"))
-      .catch((err) => console.log(err));
+    if (inputFile.files[0] === undefined) {
+      const errorMessage = document.querySelector(".error-message");
+      errorMessage.style.display = "block";
+      errorMessage.innerHTML = "<p> Veillez insérer l'image du projet </p>";
+    } else {
+      fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        body: formData,
+      })
+        .then((res) => res.json())
+        .catch((err) => console.log(err));
+    }
   });
 }
 nouveauProjet();
