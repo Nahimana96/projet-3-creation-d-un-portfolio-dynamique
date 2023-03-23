@@ -1,7 +1,7 @@
 const projets = await fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
   .then((data) => data);
-
+console.log(projets);
 // Afficher les projets à la page d'accueil
 function afficherProjets(projets) {
   for (let projet of projets) {
