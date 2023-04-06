@@ -16,15 +16,14 @@ function afficherProjets(projets) {
     const figure = document.createElement("figure");
 
     gallery.appendChild(figure);
-
     figure.appendChild(image);
     figure.appendChild(titre);
   }
 }
+afficherProjets(projets);
 
 // Trier les projets
 function trierLesProjets() {
-  afficherProjets(projets);
   const btnTous = document.querySelector(".Tous");
 
   // Bouton "TOUS" pour afficher tous les projets

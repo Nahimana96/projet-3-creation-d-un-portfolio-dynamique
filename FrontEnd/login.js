@@ -2,10 +2,11 @@ const userSophie = {
   email: "sophie.bluel@test.tld",
   password: "S0phie",
 };
-
 const form = document.querySelector(".login-section");
 const adressMail = document.getElementById("email");
 const password = document.getElementById("password");
+// création d'une fonction qui permet
+// de connecter l'administrateur si les identifiants sont correctes
 function connectAdministrator() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
