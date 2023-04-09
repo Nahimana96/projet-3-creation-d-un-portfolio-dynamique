@@ -1,7 +1,3 @@
-const userSophie = {
-  email: "sophie.bluel@test.tld",
-  password: "S0phie",
-};
 const form = document.querySelector(".login-section");
 const adressMail = document.getElementById("email");
 const password = document.getElementById("password");
@@ -16,30 +12,31 @@ function connectAdministrator() {
       password: password.value,
     };
     const error = document.querySelector(".error");
-
-    if (
-      user.email == userSophie.email &&
-      user.password == userSophie.password
-    ) {
-      error.innerHTML = "";
-      localStorage.setItem("UserId", user.email);
-      fetch("http://localhost:5678/api/users/login", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(user),
+    fetch("http://localhost:5678/api/users/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        localStorage.setItem("code", response.status);
+        response.json().then((data) => {
+          console.log(localStorage.getItem("code"));
+          if (localStorage.getItem("code") == 200) {
+            error.innerHTML = "";
+            localStorage.setItem("UserId", user.email);
+            localStorage.setItem("token", data.token);
+            window.location = "index.html";
+          } else {
+            const messageError = document.createElement("p");
+            error.innerHTML = "";
+            messageError.innerText =
+              "Erreur dans l’identifiant ou le mot de passe";
+            messageError.style.color = "red";
+            error.appendChild(messageError);
+          }
+        });
       })
-        .then((response) => response.json())
-        .then((data) => localStorage.setItem("token", data.token));
-      setTimeout(() => {
-        window.location = "index.html";
-      }, 500);
-    } else {
-      const messageError = document.createElement("p");
-      error.innerHTML = "";
-      messageError.innerText = "Erreur dans l’identifiant ou le mot de passe";
-      messageError.style.color = "red";
-      error.appendChild(messageError);
-    }
+      .catch((error) => console.log(error));
   });
 }
 connectAdministrator();

@@ -1,7 +1,7 @@
 const projets = await fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
-  .then((data) => data);
-console.log(projets);
+  .then((data) => data)
+  .catch((error) => console.log(error));
 // Afficher les projets à la page d'accueil
 function afficherProjets(projets) {
   for (let projet of projets) {
@@ -108,12 +108,7 @@ function afficherProjetsDansModale() {
       deleteProject(projet.id);
     });
   }
-  // supprimer tous les projets
-  const supprimerTout = document.querySelector(".supprimer");
-  supprimerTout.addEventListener("click", (e) => {
-    e.preventDefault();
-    deleteAllProjects();
-  });
+
   // Afficher l'icone "X" dans la modale
   const xMark = document.createElement("i");
   xMark.classList.add("fa-solid", "fa-xmark");
@@ -151,9 +146,7 @@ function deleteProject(id) {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "content-type": "application/json",
     },
-  }).then((response) => {
-    console.log(response.status);
-  });
+  }).catch((error) => console.log(error));
 }
 
 // Afficher le formulaire pour ajouter des nouveaux projets
@@ -182,7 +175,7 @@ function afficherFormulaire() {
       errorMessage.innerHTML = "<p> votre image est supérieur à 4 Mo </p>";
     } else {
       document.querySelector(".error-message").style.display = "none";
-      localStorage.setItem("imageUrl", image);
+      // localStorage.setItem("imageUrl", image);
       const reader = new FileReader();
       reader.onload = () => {
         const imgUrl = reader.result;
@@ -206,6 +199,13 @@ function afficherFormulaire() {
   const fleche = document.querySelector(".fa-arrow-left");
   fleche.addEventListener("click", () => {
     ajouterProjet.style.display = "none";
+  });
+  // changer la couleur du bouton lorsque
+  // tous les champs sont remplis
+  const formulaire = document.getElementById("ajout-projet");
+  console.log(formulaire);
+  formulaire.addEventListener("change", () => {
+    changeBtnColor();
   });
 }
 afficherFormulaire();
@@ -238,3 +238,18 @@ async function nouveauProjet() {
   });
 }
 nouveauProjet();
+
+function changeBtnColor() {
+  const titre = document.querySelector(".section-titre input");
+  const select = document.getElementById("categorie");
+  const inputFile = document.querySelector("#file");
+  if (
+    titre.value !== "" &&
+    select.value !== "" &&
+    inputFile.files[0] !== undefined
+  ) {
+    document.getElementById("submit").style.backgroundColor = "#1d6154";
+  } else {
+    document.getElementById("submit").style.backgroundColor = "#a7a7a7";
+  }
+}
