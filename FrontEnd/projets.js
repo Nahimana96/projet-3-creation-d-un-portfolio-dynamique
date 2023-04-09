@@ -203,7 +203,6 @@ function afficherFormulaire() {
   // changer la couleur du bouton lorsque
   // tous les champs sont remplis
   const formulaire = document.getElementById("ajout-projet");
-  console.log(formulaire);
   formulaire.addEventListener("change", () => {
     changeBtnColor();
   });
