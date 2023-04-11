@@ -2,6 +2,7 @@ const projets = await fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
   .then((data) => data)
   .catch((error) => console.log(error));
+console.log(projets);
 // Afficher les projets à la page d'accueil
 function afficherProjets(projets) {
   for (let projet of projets) {
@@ -12,9 +13,9 @@ function afficherProjets(projets) {
     titre.innerText = projet.title;
 
     const gallery = document.querySelector(".gallery");
-
     const figure = document.createElement("figure");
 
+    figure.classList.add("figureGallery");
     gallery.appendChild(figure);
     figure.appendChild(image);
     figure.appendChild(titre);
@@ -22,16 +23,15 @@ function afficherProjets(projets) {
 }
 afficherProjets(projets);
 
-// Trier les projets
+// // Trier les projets
 function trierLesProjets() {
-  const btnTous = document.querySelector(".Tous");
-
   // Bouton "TOUS" pour afficher tous les projets
+  const btnTous = document.querySelector(".Tous");
   btnTous.addEventListener("click", () => {
     document.querySelector(".gallery").innerHTML = "";
     afficherProjets(projets);
   });
-  // Bouton "Objtes" pour afficher uniquement les objets
+  // Bouton "Objets" pour afficher uniquement les objets
   const btnObjets = document.querySelector(".Objets");
   btnObjets.addEventListener("click", () => {
     const objets = projets.filter((projet) => {
@@ -76,25 +76,35 @@ function afficherBtnModifier() {
   lien.addEventListener("click", () => {
     localStorage.clear();
   });
+  // écouter le bouton "modifier" pour afficher la modale
+  const modale = document.getElementById("modale");
+  document.querySelectorAll(".btn").forEach((item) => {
+    item.addEventListener("click", () => {
+      modale.style.display = "flex";
+      document.querySelector(".gallery-modale").innerHTML = "";
+      afficherProjetsDansModale();
+    });
+  });
 }
 afficherBtnModifier();
 
 //Afficher les projets dans la modale
-function afficherProjetsDansModale() {
+async function afficherProjetsDansModale() {
   for (let projet of projets) {
+    const btnsupprimer = document.createElement("div");
     const imageModale = document.createElement("img");
+    const titreModal = document.createElement("figcaption");
+    const galleryModale = document.querySelector(".gallery-modale");
+    const figureModale = document.createElement("figure");
+    const trashIcon = document.createElement("i");
+
     imageModale.src = projet.imageUrl;
 
-    const titreModal = document.createElement("figcaption");
     titreModal.textContent = "éditer";
 
-    const galleryModale = document.querySelector(".gallery-modale");
-
-    const figureModale = document.createElement("figure");
-    const btnsupprimer = document.createElement("div");
+    figureModale.classList.add("figureModale");
     btnsupprimer.classList.add("btn-supprimer");
 
-    const trashIcon = document.createElement("i");
     trashIcon.classList.add("fa-solid", "fa-trash-can");
     galleryModale.appendChild(figureModale);
     figureModale.appendChild(imageModale);
@@ -105,24 +115,17 @@ function afficherProjetsDansModale() {
     // supprimer un projet au click
     btnsupprimer.addEventListener("click", (e) => {
       e.preventDefault();
+      console.log(projet);
       deleteProject(projet.id);
+      removeObject(projets, projet.id);
     });
   }
-
   // Afficher l'icone "X" dans la modale
   const xMark = document.createElement("i");
   xMark.classList.add("fa-solid", "fa-xmark");
   const modale = document.getElementById("modale");
   modale.appendChild(xMark);
 
-  // écouter le bouton "modifier" pour afficher la modale
-  document.querySelectorAll(".btn").forEach((item) => {
-    item.addEventListener("click", () => {
-      modale.style.display = "flex";
-      document.querySelector(".gallery-modale").innerHTML = "";
-      afficherProjetsDansModale();
-    });
-  });
   // fermer la modale lorsqu'on clique sur "X" et en dehors de la modale
   xMark.addEventListener("click", () => {
     modale.style.display = "none";
@@ -136,6 +139,7 @@ function afficherProjetsDansModale() {
     }
   });
 }
+
 afficherProjetsDansModale();
 
 // création d'une fonction qui supprime un projet
@@ -147,6 +151,18 @@ function deleteProject(id) {
       "content-type": "application/json",
     },
   }).catch((error) => console.log(error));
+}
+// La fonction qui enlève un projet de la liste
+function removeObject(tableau, id) {
+  const objWithIndex = tableau.findIndex((obj) => obj.id == id);
+  console.log(objWithIndex);
+  if (objWithIndex > -1) {
+    tableau.splice(objWithIndex, 1);
+    document.querySelector(".gallery").innerHTML = "";
+    afficherProjets(tableau);
+    document.querySelector(".gallery-modale").innerHTML = "";
+    afficherProjetsDansModale(tableau);
+  }
 }
 
 // Afficher le formulaire pour ajouter des nouveaux projets
@@ -166,7 +182,7 @@ function afficherFormulaire() {
   // récuperer les données de l'image choisie
   inputFile.addEventListener("change", () => {
     const image = inputFile.files[0];
-
+    console.log(image);
     // prevenir l'utilisateur si l'image dépasse 4MO
     const maxSizeBytes = 4000000;
     if (image.size > maxSizeBytes) {
@@ -210,13 +226,13 @@ function afficherFormulaire() {
 afficherFormulaire();
 
 // création d'une fonction qui envoie le nouveau projet vers l'API
-async function nouveauProjet() {
+function nouveauProjet() {
   const titre = document.querySelector(".section-titre input");
   const select = document.getElementById("categorie");
   const formulaire = document.getElementById("ajout-projet");
   const inputFile = document.querySelector("#file");
-  formulaire.addEventListener("submit", (event) => {
-    event.preventDefault();
+  const submit = document.getElementById("submit");
+  submit.addEventListener("click", (event) => {
     const formData = new FormData(formulaire);
     formData.append("image", inputFile.files[0]);
     formData.append("title", titre.value);
@@ -231,9 +247,18 @@ async function nouveauProjet() {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         body: formData,
       })
-        .then((res) => res.json())
+        .then((resp) => resp.json())
+        .then((data) => {
+          projets.push(data);
+          document.querySelector(".gallery").innerHTML = "";
+          afficherProjets(projets);
+          document.querySelector(".gallery-modale").innerHTML = "";
+          afficherProjetsDansModale(projets);
+          alert("Votre projet a été ajouté");
+        })
         .catch((err) => console.log(err));
     }
+    event.preventDefault();
   });
 }
 nouveauProjet();

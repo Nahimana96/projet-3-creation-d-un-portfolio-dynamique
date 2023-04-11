@@ -1,0 +1,38 @@
+{
+  "workbench.colorTheme": "One Dark Pro Flat",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "window.zoomLevel": 1,
+  "window.menuBarVisibility": "compact",
+  "workbench.iconTheme": "vscode-icons",
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "liveServer.settings.fullReload": true,
+  "css.lint.unknownAtRules": "ignore",
+  "explorer.confirmDragAndDrop": false,
+  "vsicons.dontShowNewVersionMessage": true,
+  "explorer.confirmDelete": false,
+  "editor.accessibilitySupport": "off",
+  "settingsSync.ignoredSettings": [],
+  "emmet.includeLanguages": { "javascript": "javascriptreact" },
+  "emmet.triggerExpansionOnTab": true,
+  "liveServer.settings.ignoreFiles": [
+  
+
+
+
+    ".vscode/**",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.ts",
+    "**"
+  
+  ]
+}
