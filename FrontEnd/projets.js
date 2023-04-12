@@ -150,7 +150,9 @@ function deleteProject(id) {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "content-type": "application/json",
     },
-  }).catch((error) => console.log(error));
+  })
+    .then((data) => console.log(data.status))
+    .catch((error) => console.log(error));
 }
 // La fonction qui enlève un projet de la liste
 function removeObject(tableau, id) {
@@ -232,7 +234,7 @@ function nouveauProjet() {
   const formulaire = document.getElementById("ajout-projet");
   const inputFile = document.querySelector("#file");
   const submit = document.getElementById("submit");
-  submit.addEventListener("click", (event) => {
+  formulaire.addEventListener("submit", (event) => {
     const formData = new FormData(formulaire);
     formData.append("image", inputFile.files[0]);
     formData.append("title", titre.value);
